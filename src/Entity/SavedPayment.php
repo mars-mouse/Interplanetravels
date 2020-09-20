@@ -22,6 +22,17 @@ class SavedPayment
      */
     private $name;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="savedPayments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Payment::class, mappedBy="savedPayment", cascade={"persist", "remove"})
+     */
+    private $payment;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +46,36 @@ class SavedPayment
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(?Payment $payment): self
+    {
+        $this->payment = $payment;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newSavedPayment = null === $payment ? null : $this;
+        if ($payment->getSavedPayment() !== $newSavedPayment) {
+            $payment->setSavedPayment($newSavedPayment);
+        }
 
         return $this;
     }

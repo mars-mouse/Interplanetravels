@@ -42,6 +42,23 @@ class Booking
      */
     private $validated;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="bookings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Payment::class, mappedBy="booking", cascade={"persist", "remove"})
+     */
+    private $payment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=TravelDate::class, inversedBy="bookings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $travelDate;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +120,48 @@ class Booking
     public function setValidated(bool $validated): self
     {
         $this->validated = $validated;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(?Payment $payment): self
+    {
+        $this->payment = $payment;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newBooking = null === $payment ? null : $this;
+        if ($payment->getBooking() !== $newBooking) {
+            $payment->setBooking($newBooking);
+        }
+
+        return $this;
+    }
+
+    public function getTravelDate(): ?TravelDate
+    {
+        return $this->travelDate;
+    }
+
+    public function setTravelDate(?TravelDate $travelDate): self
+    {
+        $this->travelDate = $travelDate;
 
         return $this;
     }

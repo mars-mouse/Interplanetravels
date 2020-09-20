@@ -37,6 +37,17 @@ class SupportTicket
      */
     private $visitorName;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="supportTickets")
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=TicketCategory::class, inversedBy="supportTickets")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $ticketCategory;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +97,30 @@ class SupportTicket
     public function setVisitorName(?string $visitorName): self
     {
         $this->visitorName = $visitorName;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getTicketCategory(): ?TicketCategory
+    {
+        return $this->ticketCategory;
+    }
+
+    public function setTicketCategory(?TicketCategory $ticketCategory): self
+    {
+        $this->ticketCategory = $ticketCategory;
 
         return $this;
     }

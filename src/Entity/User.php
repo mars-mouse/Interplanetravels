@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -48,6 +50,40 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $phone;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="user")
+     */
+    private $reviews;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SavedPayment::class, mappedBy="user")
+     */
+    private $savedPayments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="user")
+     */
+    private $bookings;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Bookmark::class, mappedBy="user")
+     */
+    private $bookmarks;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SupportTicket::class, mappedBy="user")
+     */
+    private $supportTickets;
+
+    public function __construct()
+    {
+        $this->reviews = new ArrayCollection();
+        $this->savedPayments = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
+        $this->bookmarks = new ArrayCollection();
+        $this->supportTickets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -159,6 +195,161 @@ class User implements UserInterface
     public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Review[]
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Review $review): self
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews[] = $review;
+            $review->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Review $review): self
+    {
+        if ($this->reviews->contains($review)) {
+            $this->reviews->removeElement($review);
+            // set the owning side to null (unless already changed)
+            if ($review->getUser() === $this) {
+                $review->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SavedPayment[]
+     */
+    public function getSavedPayments(): Collection
+    {
+        return $this->savedPayments;
+    }
+
+    public function addSavedPayment(SavedPayment $savedPayment): self
+    {
+        if (!$this->savedPayments->contains($savedPayment)) {
+            $this->savedPayments[] = $savedPayment;
+            $savedPayment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSavedPayment(SavedPayment $savedPayment): self
+    {
+        if ($this->savedPayments->contains($savedPayment)) {
+            $this->savedPayments->removeElement($savedPayment);
+            // set the owning side to null (unless already changed)
+            if ($savedPayment->getUser() === $this) {
+                $savedPayment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Booking[]
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): self
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): self
+    {
+        if ($this->bookings->contains($booking)) {
+            $this->bookings->removeElement($booking);
+            // set the owning side to null (unless already changed)
+            if ($booking->getUser() === $this) {
+                $booking->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Bookmark[]
+     */
+    public function getBookmarks(): Collection
+    {
+        return $this->bookmarks;
+    }
+
+    public function addBookmark(Bookmark $bookmark): self
+    {
+        if (!$this->bookmarks->contains($bookmark)) {
+            $this->bookmarks[] = $bookmark;
+            $bookmark->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookmark(Bookmark $bookmark): self
+    {
+        if ($this->bookmarks->contains($bookmark)) {
+            $this->bookmarks->removeElement($bookmark);
+            // set the owning side to null (unless already changed)
+            if ($bookmark->getUser() === $this) {
+                $bookmark->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SupportTicket[]
+     */
+    public function getSupportTickets(): Collection
+    {
+        return $this->supportTickets;
+    }
+
+    public function addSupportTicket(SupportTicket $supportTicket): self
+    {
+        if (!$this->supportTickets->contains($supportTicket)) {
+            $this->supportTickets[] = $supportTicket;
+            $supportTicket->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupportTicket(SupportTicket $supportTicket): self
+    {
+        if ($this->supportTickets->contains($supportTicket)) {
+            $this->supportTickets->removeElement($supportTicket);
+            // set the owning side to null (unless already changed)
+            if ($supportTicket->getUser() === $this) {
+                $supportTicket->setUser(null);
+            }
+        }
 
         return $this;
     }

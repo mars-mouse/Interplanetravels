@@ -27,6 +27,12 @@ class ImageTransport
      */
     private $source;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Transport::class, inversedBy="images")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $transport;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +58,18 @@ class ImageTransport
     public function setSource(string $source): self
     {
         $this->source = $source;
+
+        return $this;
+    }
+
+    public function getTransport(): ?Transport
+    {
+        return $this->transport;
+    }
+
+    public function setTransport(?Transport $transport): self
+    {
+        $this->transport = $transport;
 
         return $this;
     }

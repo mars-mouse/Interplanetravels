@@ -52,6 +52,16 @@ class Payment
      */
     private $fullName;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Booking::class, inversedBy="payment", cascade={"persist", "remove"})
+     */
+    private $booking;
+
+    /**
+     * @ORM\OneToOne(targetEntity=SavedPayment::class, inversedBy="payment", cascade={"persist", "remove"})
+     */
+    private $savedPayment;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +147,30 @@ class Payment
     public function setFullName(string $fullName): self
     {
         $this->fullName = $fullName;
+
+        return $this;
+    }
+
+    public function getBooking(): ?Booking
+    {
+        return $this->booking;
+    }
+
+    public function setBooking(?Booking $booking): self
+    {
+        $this->booking = $booking;
+
+        return $this;
+    }
+
+    public function getSavedPayment(): ?SavedPayment
+    {
+        return $this->savedPayment;
+    }
+
+    public function setSavedPayment(?SavedPayment $savedPayment): self
+    {
+        $this->savedPayment = $savedPayment;
 
         return $this;
     }

@@ -27,6 +27,12 @@ class ImageTravel
      */
     private $source;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Travel::class, inversedBy="images")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $travel;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +58,18 @@ class ImageTravel
     public function setSource(string $source): self
     {
         $this->source = $source;
+
+        return $this;
+    }
+
+    public function getTravel(): ?Travel
+    {
+        return $this->travel;
+    }
+
+    public function setTravel(?Travel $travel): self
+    {
+        $this->travel = $travel;
 
         return $this;
     }

@@ -22,6 +22,18 @@ class Bookmark
      */
     private $alert;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="bookmarks")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Travel::class, inversedBy="bookmarks")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $travel;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +47,30 @@ class Bookmark
     public function setAlert(bool $alert): self
     {
         $this->alert = $alert;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getTravel(): ?Travel
+    {
+        return $this->travel;
+    }
+
+    public function setTravel(?Travel $travel): self
+    {
+        $this->travel = $travel;
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TicketCategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,6 +24,16 @@ class TicketCategory
      */
     private $name;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SupportTicket::class, mappedBy="ticketCategory")
+     */
+    private $supportTickets;
+
+    public function __construct()
+    {
+        $this->supportTickets = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +47,37 @@ class TicketCategory
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SupportTicket[]
+     */
+    public function getSupportTickets(): Collection
+    {
+        return $this->supportTickets;
+    }
+
+    public function addSupportTicket(SupportTicket $supportTicket): self
+    {
+        if (!$this->supportTickets->contains($supportTicket)) {
+            $this->supportTickets[] = $supportTicket;
+            $supportTicket->setTicketCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupportTicket(SupportTicket $supportTicket): self
+    {
+        if ($this->supportTickets->contains($supportTicket)) {
+            $this->supportTickets->removeElement($supportTicket);
+            // set the owning side to null (unless already changed)
+            if ($supportTicket->getTicketCategory() === $this) {
+                $supportTicket->setTicketCategory(null);
+            }
+        }
 
         return $this;
     }

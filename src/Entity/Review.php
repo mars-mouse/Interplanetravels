@@ -27,6 +27,18 @@ class Review
      */
     private $note;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Travel::class, inversedBy="reviews")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $travel;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +64,30 @@ class Review
     public function setNote(int $note): self
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getTravel(): ?Travel
+    {
+        return $this->travel;
+    }
+
+    public function setTravel(?Travel $travel): self
+    {
+        $this->travel = $travel;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
