@@ -18,16 +18,6 @@ class Travel
     private $id;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dateDeparture;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dateReturn;
-
-    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $maxPlaces;
@@ -45,30 +35,6 @@ class Travel
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDateDeparture(): ?\DateTimeInterface
-    {
-        return $this->dateDeparture;
-    }
-
-    public function setDateDeparture(?\DateTimeInterface $dateDeparture): self
-    {
-        $this->dateDeparture = $dateDeparture;
-
-        return $this;
-    }
-
-    public function getDateReturn(): ?\DateTimeInterface
-    {
-        return $this->dateReturn;
-    }
-
-    public function setDateReturn(?\DateTimeInterface $dateReturn): self
-    {
-        $this->dateReturn = $dateReturn;
-
-        return $this;
     }
 
     public function getMaxPlaces(): ?int
