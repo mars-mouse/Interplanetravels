@@ -1,0 +1,32 @@
+{% extends "_template.html.twig" %}
+
+{% block title %}Interplanetravels - Home
+{% endblock %}
+
+{% block main %}
+	<h2>List of destinations with their destination type :</h2>
+	<ul>
+		{% for destination in destinations_list %}
+			<li>
+				<strong>{{destination.nameDestination}}</strong>
+				({{ destination.idDestinationTypeDestination.nameDestinationType}}) :
+				{{ destination.descriptionDestination }}</li>
+		{% endfor %}
+	</ul>
+	<h2>List of destination types with all their destinations :</h2>
+	{% for destinationType in destinationTypes_list %}
+		<h3>{{destinationType.nameDestinationType}}</h3>
+		<ul>
+			{% for destination in destinationType.destinations %}
+				<li>{{ destination.nameDestination }}</li>
+			{% endfor %}
+		</ul>
+
+	{% endfor %}
+	<h2>Avec React</h2>
+	<div id="react-root"></div>
+{% endblock %}
+
+{% block javascripts %}
+	{# <script type="modules" src="./index.js"/> #}
+{% endblock %}

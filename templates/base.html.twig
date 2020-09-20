@@ -1,12 +1,47 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		{% block stylesheets %}{% endblock %}
+	</head>
+	<body>
+		{% block body %}
+			<div id="bg-moon"></div>
+			<div id="content">
+				<header>
+					{% block header %}
+						{% block navbar %}{% endblock %}
+
+						<section id="titre" class="d-flex flex-row justify-content-center align-items-center">
+
+							<img
+							id="logo-header" src="img/logo_interplanetravels_120.png" alt="Logo Interplanetravels" width="120">
+							<!-- https://via.placeholder.com/120/54718E/DEE8EE?text=Logo120x120 -->
+							<div>
+								<h1>Interplanetravels</h1>
+								<h4>Expand your horizons</h4>
+							</div>
+						</section>
+
+						{% block searchBar %}{% endblock %}
+
+					{% endblock %}
+				</header>
+				<main>
+					{% block main %}Content
+					{% endblock %}
+				</main>
+				<footer>
+					{% block footer %}Copyright and all
+					{% endblock %}
+				</footer>
+			</div>
+		{% endblock %}
+		{% block javascripts %}{% endblock %}
+	</body>
 </html>
