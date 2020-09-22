@@ -1,0 +1,92 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Travels Management
+{% endblock %}
+
+{% block searchBar %}
+	<div id="searchForm" class="p-3">
+		Travels Management
+	</div>
+{% endblock %}
+
+{% block main %}
+	<div id="newTravel">
+		<h2>New Travel</h2>
+		<form method="POST">
+			<fieldset class="form-row">
+				<div class="form-group col-12">
+					<label for="name">Travel name :</label>
+					<input type="text" class="form-control" id="name" name="name">
+				</div>
+				<div class="form-group col-6">
+					<label for="price">Price :</label>
+					<input type="text" class="form-control" id="price" name="price">
+				</div>
+				<div class="form-group col-6">
+					<label for="maxPlaces">Number of places :</label>
+					<input type="text" class="form-control" id="maxPlaces" name="maxPlaces">
+				</div>
+				<div class="form-group col-6">
+					<label for="dateDeparture">Date of departure :</label>
+					<input type="date" class="form-control" id="dateDeparture" name="dateDeparture">
+				</div>
+				<div class="form-group col-6">
+					<label for="dateReturn">Date of return :</label>
+					<input type="date" class="form-control" id="dateReturn" name="dateReturn">
+				</div>
+				<div class="form-group col-12">
+					<label for="departFrom">Depart from :</label>
+					<select name="departFrom" id="departFrom" class="form-control">
+						{% for spaceport in depart_from_list %}
+							<option value="{{ spaceport.id }}">{{ spaceport.name }}</option>
+						{% endfor %}
+						<option value="">Spaceport A</option>
+						<option value="">Spaceport B</option>
+						<option value="">Spaceport C</option>
+					</select>
+				</div>
+				<div class="form-group col-12">
+					<label for="description">Description :</label>
+					<textarea class="form-control" id="description" name="description"></textarea>
+					{# <div class="invalid-feedback"> Please enter a message in the textarea. </div> #}
+				</div>
+			</fieldset>
+			<fieldset class="form-row">
+				<legend>Itinerary</legend>
+				<div class="form-group col-12">
+					<label for="destination1">Destination #1</label>
+					<select name="destination1" id="destination1" class="form-control">
+						{% for destination in destinations_list %}
+							<option value="{{ destination.id }}">{{ destination.name }}</option>
+						{% endfor %}
+						<option value="">Destination A</option>
+						<option value="">Destination B</option>
+						<option value="">Destination C</option>
+					</select>
+				</div>
+				<div class="form-group col-6">
+					<label for="dayArrival1">Arrival on Day :</label>
+					<input type="number" class="form-control" id="dayArrival1" name="dayArrival1">
+				</div>
+				<div class="form-group col-6">
+					<label for="dayDeparture1">Departure on Day :</label>
+					<input type="number" class="form-control" id="dayDeparture1" name="dayDeparture1">
+				</div>
+				<div class="form-group col-12">
+					<label for="transport1">Transport</label>
+					<select name="transport1" id="transport1" class="form-control">
+						{% for transport in transports_list %}
+							<option value="{{ transport.id }}">{{ transport.name }}</option>
+						{% endfor %}
+						<option value="">Transport A</option>
+						<option value="">Transport B</option>
+						<option value="">Transport C</option>
+					</select>
+				</div>
+				<button type="button" class="p-2">+ Add Destination</button>&emsp;
+				<button type="button" class="p-2">- Remove last Destination</button>
+			</fieldset>
+			<button type="submit" class="my-2 p-2">Register</button>
+		</form>
+	</div>
+{% endblock %}

@@ -20,7 +20,7 @@
 						<section id="titre" class="d-flex flex-row justify-content-center align-items-center">
 
 							<img
-							id="logo-header" src="img/logo_interplanetravels_120.png" alt="Logo Interplanetravels" width="120">
+							id="logo-header" src="{{ asset('build/images/logo_interplanetravels_120.png') }}" alt="Logo Interplanetravels" width="120">
 							<!-- https://via.placeholder.com/120/54718E/DEE8EE?text=Logo120x120 -->
 							<div>
 								<h1>Interplanetravels</h1>
@@ -32,12 +32,27 @@
 
 					{% endblock %}
 				</header>
-				<main>
+				<main class="p-3">
 					{% block main %}Content
 					{% endblock %}
 				</main>
-				<footer>
-					{% block footer %}Copyright and all
+				<footer class="d-flex flex-column justify-content-center align-items-center">
+					{% block footer %}
+						<div class="d-flex flex-row justify-content-center align-items-start">
+							<img
+							class="mr-2" src="{{asset('build/images/logo_interplanetravels_70.png')}}" alt="Logo" width="70">
+							<!-- https://via.placeholder.com/70/54718E/DEE8EE?text=Logo70x70 -->
+							<div>
+								<p>
+									<a href="">
+										Terms of Use</a><br>
+									<a href="">Privacy and Cookies</a><br>
+									<a href="">Site Map</a>
+								</p>
+							</div>
+
+						</div>
+						<p class="text-center">© Maxime Rousseau</p>
 					{% endblock %}
 				</footer>
 			</div>
