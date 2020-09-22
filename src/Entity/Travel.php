@@ -70,6 +70,11 @@ class Travel
      */
     private $bookmarks;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
     public function __construct()
     {
         $this->travelDates = new ArrayCollection();
@@ -295,6 +300,18 @@ class Travel
                 $bookmark->setTravel(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
