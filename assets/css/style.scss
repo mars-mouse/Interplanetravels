@@ -1,3 +1,5 @@
+@import "~bootstrap/scss/bootstrap";
+
 $black: #070A12;
 $light-blue: #DEE8EE;
 $blue: #83A1B9;
@@ -53,7 +55,7 @@ body{
         top: 0;
         left: 0;
         
-        background-image: url("img/bg-moon-600.jpg");
+        background-image: url("../img/bg-moon-600.jpg");
 
         filter: blur(8px);
         -webkit-filter: blur(8px);
@@ -82,7 +84,7 @@ body{
 
 header{
     background-image:   linear-gradient(to top right, rgba($dark-blue, 0.5), rgba(lighten($dark-blue, 20%), 0.7)), 
-                        url("img/bg-galaxy-1060.jpg");
+                        url("../img/bg-galaxy-1060.jpg");
     background-size: cover;
     background-position: center;
     color: $light-blue;
@@ -95,7 +97,7 @@ header{
 
         #login{
             width: 250px;
-            @include buttonShader($light-blue, $dark-blue, 0)
+            @include buttonShader($light-blue, $dark-blue, 0);
 
             button{
                 @include buttonShader($gold, #fbfbfb, 1, 1);
@@ -157,6 +159,13 @@ header{
         button{
             @include buttonShader($gold, #fbfbfb, 1, 1);
             min-width: 75px;
+        }
+    }
+
+    #accountMenu {
+        @include buttonShader($light-blue, $dark-blue, 0);
+        a.dropdown-item {
+            color: $dark-blue;
         }
     }
 }
@@ -222,6 +231,14 @@ main{
             border: 1px solid $blue;
             border-top: none;
         }
+    }
+
+    #loginForm button{
+        @include buttonShader($gold, #fbfbfb, 1, 1);
+    }
+
+    #newTravel button{
+        @include buttonShader($light-blue, $dark-blue);
     }
 }
 
