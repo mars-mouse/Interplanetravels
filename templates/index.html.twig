@@ -3,9 +3,106 @@
 {% block title %}Interplanetravels - Home
 {% endblock %}
 
+{% block searchBar %}
+	<div id="react-root"></div>
+{% endblock %}
+
 {% block main %}
-	<h2>Promotions</h2>
-	<div>beep bop</div>
-	<h2>Travel list</h2>
-	<div>beep boop bap</div>
+	<p>TODO:</p>
+	<ul>
+		<li>images src</li>
+		<li>Links to card</li>
+		<li>Pages of results</li>
+		<li>order by</li>
+		<li>Links to complete lists</li>
+	</ul>
+	{% if promotions_list %}
+		<section id="specialDeals">
+			<h2 class="mb-4">Special deals</h2>
+			<div class="row row-cols-1 row-cols-md-3">
+				{% for promotion in promotions_list %}
+					<div class="col mb-4">
+						<div class="card">
+							<img src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Promotion" class="card-img-top" alt="Photo of SuperTravel">
+							<div class="card-body">
+								<h4 class="card-title">{{ promotion.title }}</h4>
+								<p class="card-text">{{ promotion.description|format_text(100)|raw() }}
+								</p>
+							</div>
+							<div class="card-footer">
+								<small class="text-muted">Expires in
+									{{ expires_in(promotion.dateEnd) }}.</small>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+
+			</div>
+			<div>
+				{% if see_more_promotions %}
+					<a href="">[See more...]</a>
+				{% endif %}
+			</div>
+		</section>
+	{% endif %}
+
+	<section id="travelList">
+		<h2>Our travels</h2>
+		<div class="text-right my-2">Ordered by : &emsp;
+			<div class="btn-group dropleft">
+				<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Price
+				</button>
+				<div class="dropdown-menu">
+					<a href="#travelList" class="dropdown-item">Name</a>
+					<a href="#travelList" class="dropdown-item">Date</a>
+					<a href="#travelList" class="dropdown-item">Price</a>
+				</div>
+			</div>
+		</div>
+		<div class="row row-cols-1 row-cols-md-3">
+			{% for travel in travels_list %}
+				<div class="col mb-4">
+					<div class="card">
+						<img src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Travel" class="card-img-top" alt="Photo of SuperTravel">
+						<div class="card-body">
+							<h4 class="card-title">{{ travel.name }}</h4>
+							<p class="card-text">{{ travel.description|format_text(100)|raw() }}</p>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+		{% if max_pages > 1 %}
+			<ul
+				class="pagination pagination-sm">
+				{# left arrow  #}
+				{% if this_page - 1 < 1 %}
+					{% set page_voulue = 1 %}
+				{% else %}
+					{% set page_voulue = this_page - 1 %}
+				{% endif %}
+				<li {{ this_page == 1 ? 'class="disabled"' }}>
+					<a href="{{ path('routeName', {page: page_voulue}) }}">left</a>
+				</li>
+
+				{# Render each page number #}
+				{% for i in 1..max_pages %}
+					<li {{ this_page == i ? 'class="active"' }}>
+						<a href="{{ path('routeName', {page: i}) }}">{{ i }}</a>
+					</li>
+				{% endfor %}
+
+				{# right arrow #}
+				{% if this_page + 1  <= max_pages %}
+					{% set page_voulue2 = this_page + 1 %}
+				{% else %}
+					{% set page_voulue2 = this_page %}
+				{% endif %}
+				<li {{ this_page == max_pages ? 'class="disabled"' }}>
+					<a href="{{ path('routeName', {page: page_voulue2}) }}">right</a>
+				</li>
+			</ul>
+		{% endif %}
+	</section>
 {% endblock %}

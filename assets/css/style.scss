@@ -162,6 +162,22 @@ header{
         }
     }
 
+    #suggestionList{
+        position: absolute;
+        top: 440px;
+        left: 30px;
+        z-index: 200;
+
+        color: $dark-blue;
+
+        a {
+            &:hover{
+                text-decoration: none;
+                background-color: $light-blue;
+            }
+        }
+    }
+
     #accountMenu {
         @include buttonShader($light-blue, $dark-blue, 0);
         a.dropdown-item {

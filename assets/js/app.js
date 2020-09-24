@@ -1,18 +1,4 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
-
-// any CSS you import will output into a single css file (app.css in this case)
-// import '../css/app.css';
-
-// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
-// import $ from 'jquery';
-
-// console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
-
+/// App.js - entry 'App'
 
 require('../css/style.scss');
 const $ = require('jquery');
@@ -20,8 +6,18 @@ const $ = require('jquery');
 // the bootstrap module doesn't export/return anything
 require('bootstrap');
 
-// $(document).ready(function () {
-//     $('[data-toggle="popover"]').popover();
-// });
-
+// JS qui gère la lune en fond flou
 require('./index');
+
+// REACT
+import React from 'react';
+import ReactDOM from 'react-dom';   // vient du dosser node_modules
+
+import { SearchBar } from './SearchBar';    // notre JSX
+
+// si on a la balise react-root dans le document
+const reactRootHTML = document.getElementById('react-root');
+if (reactRootHTML !== undefined) {
+    // on lance la formule magique pour démarrer React
+    ReactDOM.render(<SearchBar />, reactRootHTML);
+}

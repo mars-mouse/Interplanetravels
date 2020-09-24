@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Promotion;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @method Promotion|null find($id, $lockMode = null, $lockVersion = null)
@@ -36,15 +38,29 @@ class PromotionRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Promotion
+    public function findActivePromotions()
     {
+        $currentDate = new DateTime();
+
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->where('p.dateEnd > :cd')
+            ->andWhere('p.dateStart <= :cd')
+            ->setParameter('cd', $currentDate)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function findThreeActivePromotions()
+    {
+        $currentDate = new DateTime();
+
+        return $this->createQueryBuilder('p')
+            ->where('p.dateEnd > :cd')
+            ->andWhere('p.dateStart <= :cd')
+            ->setParameter('cd', $currentDate)
+            ->orderBy('p.dateEnd', 'ASC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    }
 }
