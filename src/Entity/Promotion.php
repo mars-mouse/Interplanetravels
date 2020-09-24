@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PromotionRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,9 +21,9 @@ class Promotion
     private $id;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="integer")
      */
-    private $amount;
+    private $amount;    // percentage off
 
     /**
      * @ORM\Column(type="datetime")
@@ -38,6 +39,16 @@ class Promotion
      * @ORM\OneToMany(targetEntity=Travel::class, mappedBy="promotion")
      */
     private $travels;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $title;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
 
     public function __construct()
     {
@@ -114,5 +125,39 @@ class Promotion
         }
 
         return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function isPromotionActive()
+    {
+        $currentDate = new DateTime('now');
+
+        if ($this->dateStart <= $currentDate && $currentDate < $this->dateEnd) {
+            return true;
+        }
+        return false;
     }
 }
