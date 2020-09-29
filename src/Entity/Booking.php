@@ -28,7 +28,7 @@ class Booking
     private $paidAmount;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="integer")
      */
     private $promotionValue;
 
@@ -88,12 +88,12 @@ class Booking
         return $this;
     }
 
-    public function getPromotionValue(): ?float
+    public function getPromotionValue(): ?int
     {
         return $this->promotionValue;
     }
 
-    public function setPromotionValue(float $promotionValue): self
+    public function setPromotionValue(int $promotionValue): self
     {
         $this->promotionValue = $promotionValue;
 

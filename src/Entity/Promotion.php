@@ -60,12 +60,12 @@ class Promotion
         return $this->id;
     }
 
-    public function getAmount(): ?float
+    public function getAmount(): ?int
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): self
+    public function setAmount(int $amount): self
     {
         $this->amount = $amount;
 
