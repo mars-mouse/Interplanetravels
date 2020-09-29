@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use App\Entity\TravelDate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,22 +20,35 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
-    // /**
-    //  * @return Booking[] Returns an array of Booking objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Booking[] Returns an array of Booking objects
+     */
+    public function findByTravelId($travelId)
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
+            ->innerJoin('b.travelDate', 'td')
+            ->andWhere('td.travel = :val')
+            ->setParameter('val', $travelId)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
+
+
+
+    /**
+     * @return int Renvoie nombre de places réservées
+     */
+    public function sumBookedPlaces(TravelDate $travelDate)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('SUM(b.numberPlaces)')
+            ->andWhere('b.validated = true')
+            ->innerJoin('b.travelDate', 'td')
+            ->andWhere('td.travel = :val')
+            ->setParameter('val', $travelDate->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
     /*
     public function findOneBySomeField($value): ?Booking

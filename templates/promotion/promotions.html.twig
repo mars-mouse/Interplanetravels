@@ -1,0 +1,33 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Special Deals
+{% endblock %}
+
+{% block main %}
+	{% if promotions_list %}
+		<section id="specialDeals">
+			<h2 class="mb-4">All the Special Deals</h2>
+			<div class="row row-cols-1 row-cols-md-3">
+				{% for promotion in promotions_list %}
+					<div class="col mb-4">
+						<a class="no-underline" href="{{ path('promotion', {id: promotion.id}) }}">
+							<div class="card">
+								<img src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Promotion" class="card-img-top" alt="Photo of SuperTravel">
+								<div class="card-body">
+									<h4 class="card-title">{{ promotion.title }}</h4>
+									<p class="card-text">{{ promotion.description|format_text(100)|raw() }}
+									</p>
+								</div>
+								<div class="card-footer">
+									<small class="text-muted">Expires in
+										{{ expires_in(promotion.dateEnd) }}.</small>
+								</div>
+							</div>
+						</div>
+					</a>
+				{% endfor %}
+
+			</div>
+		</section>
+	{% endif %}
+{% endblock %}

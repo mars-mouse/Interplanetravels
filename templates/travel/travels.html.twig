@@ -1,0 +1,26 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Travels
+{% endblock %}
+
+{% block main %}
+	<h2>All our travels</h2>
+	<p>Some travels may be unavailable at the moment. Be sure to bookmark them in order to be alerted when they become available again.</p>
+	{% if travels_list %}
+		<div class="row row-cols-1 row-cols-md-3">
+			{% for travel in travels_list %}
+				<div class="col mb-4">
+					<a class="no-underline" href="{{ path('travel', {id: travel.id}) }}">
+						<div class="card">
+							<img src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Travel" class="card-img-top" alt="Photo of SuperTravel">
+							<div class="card-body">
+								<h4 class="card-title">{{ travel.name }}</h4>
+								<p class="card-text">{{ travel.description|format_text(100)|raw() }}</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}

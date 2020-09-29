@@ -6,6 +6,7 @@ use App\Repository\PromotionRepository;
 use App\Repository\TravelRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -14,14 +15,14 @@ use Symfony\Component\Security\Core\Security;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/{page}", name="homepage")
+     * @Route("/", name="homepage")
      */
     public function index(
         UrlGeneratorInterface $urlGenerator,
         Security $security,
         PromotionRepository $promotionRepository,
         TravelRepository $travelRepository,
-        $page = 1
+        Request $request
     ) {
         // Si on se connecte en tant qu'Admin sur la homepage, on est renvoyé vers le backoffice
         if ($security->isGranted('ROLE_ADMIN')) {
@@ -70,8 +71,22 @@ class HomeController extends AbstractController
             $validPromotions = array_slice($validPromotions, 0, 3);
         }
         */
-        $validTravels = $travelRepository->findSixAvailable($page);
+
+        // La page en cours est donnée en GET
+        $page = $request->query->get('page', 1);
+
+        if (!is_numeric($page)) {
+            $page = 1;
+        }
+
+        // OrderBy est donné en GET
+        $orderBy = $request->query->get('order', 'id');
+
+        $validTravels = $travelRepository->findSixAvailable($page, $orderBy);
+
         $maxPages = ceil($validTravels->count() / 6);
+
+        $page = min($page, $maxPages);
 
         // s'il y a plus de 7 pages, n'afficher que les pages autour + premier dernier
         // < 1 2 3 4 5 6 7 >
@@ -90,6 +105,11 @@ class HomeController extends AbstractController
         //      5 pages = $page - 2 à $page + 2
 
         // si $maxPages == 1, dans le twig template on dit qu'on l'affiche pas
+
+        // test values
+        // $page = 5;
+        // $maxPages = 18;
+
         $range = [];
         if ($maxPages <= 7) {
             // < 1 2 >
@@ -97,25 +117,28 @@ class HomeController extends AbstractController
             for ($i = 1; $i <= $maxPages; $i++) {
                 $range[] = $i;
             }
+        } elseif ($page <= 4) {
+            // < 1 2 3 4 5 6 ... 22 >
+            $range = [1, 2, 3, 4, 5, 6, '...', $maxPages];
+        } elseif ($page >= $maxPages - 3) {
+            // < 1 ... 7 8 9 10 11 12 >
+            $range = [1, '...'];
+            $range = array_merge($range, range($maxPages - 5, $maxPages));
+            // for ($i = $maxPages - 5; $i <= $maxPages; $i++) {
+            //     $range[] = $i;
+            // }
         } else {
-            if ($page < 3) {
-                // < 1 2 3 4 5 6 ... 22 >
-                $range = [1, 2, 3, 4, 5, 6, '...', $maxPages];
-            } elseif ($page > $maxPages - 2) {
-                // < 1 ... 7 8 9 10 11 12 >
-                $range = [1, '...'];
-                for ($i = $maxPages - 5; $i <= $maxPages; $i++) {
-                    $range[] = $i;
-                }
-            } else {
-                // < 1 ... 12 13 14 15 16 ... 82 >
-                $range = [1, '...'];
-                for ($i = $page - 2; $i <= $page + 2; $i++) {
-                    $range[] = $i;
-                }
-                $range[] = '...';
-                $range[] = $maxPages;
-            }
+            // < 1 ... 12 13 14 15 16 ... 82 >
+            $range = [1, '...'];
+            $range = array_merge($range, range($page - 2, $page + 2));
+            $range = array_merge($range, ['...', $maxPages]);
+
+            // $range = [1, '...'];
+            // for ($i = $page - 2; $i <= $page + 2; $i++) {
+            //     $range[] = $i;
+            // }
+            // $range[] = '...';
+            // $range[] = $maxPages;
         }
 
         /*

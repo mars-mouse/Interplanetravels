@@ -1,0 +1,40 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Travel
+{% endblock %}
+
+{% block main %}
+	{% if travel %}
+		<h2>{{ travel.name }}</h2>
+		<img class="my-2" src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Travel" alt="placeholder">
+		<p>{{ travel.description }}</p>
+		{% if travel.maxPlaces == 0 %}
+			<p>This travel is currently unavailable.</p>
+			{% if app.user %}
+				<p>If you want to be alerted when it becomes available, bookmark it!</p>
+				<button type="button">Bookmark</button>
+			{% else %}
+				<p>Sign in to be able to bookmark it and be alerted when it becomes available!</p>
+				<a href="{{ path('app_login') }}">Sign in</a>&emsp;<button type="button">Sign up</button>
+			{% endif %}
+		{% else %}
+			<h3>List of available dates</h3>
+			{% if travel.travelDates %}
+				<ul>
+					{% for travelDate in travel.travelDates %}
+						<li>Depart on:
+							{{ travelDate.dateDeparture|date('Y-m-d h:i') }}, return on:
+							{{ travelDate.dateDeparture|date('Y-m-d h:i') }}. Remaining places:
+							{{ travel.maxPlaces - booked[travelDate.id] }}.
+							{% if travel.maxPlaces - booked[travelDate.id] > 0 %}
+								<a href="">Book</a>
+							{% else %}
+								Full.
+							{% endif %}
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		{% endif %}
+	{% endif %}
+{% endblock %}

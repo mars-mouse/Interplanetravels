@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Travel;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,14 +25,25 @@ class TravelRepository extends ServiceEntityRepository
      * Récupérer la page n° $currentPage des pages de Travel qui s'affichent 6 par 6 
      * @return Paginator
      */
-    public function findSixAvailable($currentPage)
+    public function findSixAvailable($currentPage, $orderBy)
     {
         // ($page - 1) * $limit
         // $request->query->get('page', 1)
+        if (!in_array($orderBy, ['name', 'price', 'dateDeparture'])) {
+            $orderBy = 'id';
+        }
+
+        if ($orderBy === "dateDeparture") {
+            $orderBy = 'td.' . $orderBy;
+        } else {
+            $orderBy = 't.' . $orderBy;
+        }
 
         $query = $this->createQueryBuilder('t')
             ->andWhere('t.maxPlaces > 0')
-            ->orderBy('t.id', 'ASC');
+            ->innerJoin('t.travelDates', 'td')
+            ->andWhere('td.dateDeparture > CURRENT_DATE()')
+            ->orderBy($orderBy, 'ASC');
 
         $paginator = $this->paginate($query, $currentPage, 6);
 
