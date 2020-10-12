@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Destination;
 use App\Entity\Travel;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -22,7 +23,7 @@ class TravelRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupérer la page n° $currentPage des pages de Travel qui s'affichent 6 par 6 
+     * Récupérer la page n° $currentPage des pages de Travel disponibles qui s'affichent 6 par 6 
      * @return Paginator
      */
     public function findSixAvailable($currentPage, $orderBy)
@@ -74,6 +75,44 @@ class TravelRepository extends ServiceEntityRepository
         $paginator->getQuery()
             ->setFirstResult($limit * ($page - 1))  // Offset
             ->setMaxResults($limit);                // Limit
+
+        return $paginator;
+    }
+
+    /**
+     * Récupérer la page n° $currentPage des pages de Travel de la Destination qui s'affichent 6 par 6 
+     * @return Paginator
+     */
+    public function findSixByDestination($currentPage, $orderBy, Destination $destination)
+    {
+        // ($page - 1) * $limit
+        // $request->query->get('page', 1)
+        if (!in_array($orderBy, ['name', 'price', 'dateDeparture'])) {
+            $orderBy = 'id';
+        }
+
+        if ($orderBy === "dateDeparture") {
+            $orderBy = 'td.' . $orderBy;
+        } else {
+            $orderBy = 't.' . $orderBy;
+        }
+
+        // SELECT * 
+        // FROM travel t 
+        //   INNER JOIN itinerary i ON t.id = i.travel_id 
+        //   INNER JOIN destination d ON i.destination_id = d.id 
+        // WHERE t.id = ?1 
+        $query = $this->createQueryBuilder('t')
+            ->innerJoin('t.itineraries', 'i')
+            ->innerJoin('i.destination', 'd')
+            ->innerJoin('t.travelDates', 'td')
+            ->andWhere('t.maxPlaces > 0')
+            ->andWhere('td.dateDeparture > CURRENT_DATE()')
+            ->andWhere('d.id = ?1')
+            ->setParameter(1, $destination->getId())
+            ->orderBy($orderBy, 'ASC');
+
+        $paginator = $this->paginate($query, $currentPage, 6);
 
         return $paginator;
     }

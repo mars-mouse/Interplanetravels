@@ -18,23 +18,61 @@
 				<a href="{{ path('app_login') }}">Sign in</a>&emsp;<button type="button">Sign up</button>
 			{% endif %}
 		{% else %}
-			<h3>List of available dates</h3>
 			{% if travel.travelDates %}
-				<ul>
-					{% for travelDate in travel.travelDates %}
-						<li>Depart on:
-							{{ travelDate.dateDeparture|date('Y-m-d h:i') }}, return on:
-							{{ travelDate.dateDeparture|date('Y-m-d h:i') }}. Remaining places:
-							{{ travel.maxPlaces - booked[travelDate.id] }}.
-							{% if travel.maxPlaces - booked[travelDate.id] > 0 %}
-								<a href="">Book</a>
-							{% else %}
-								Full.
-							{% endif %}
-						</li>
-					{% endfor %}
-				</ul>
+				<table id="travelDates" class="table">
+					<thead class="thead-light">
+						<tr>
+							<th>Departure</th>
+							<th>Return</th>
+							<th>Remaining places</th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for travelDate in travel.travelDates %}
+							<tr>
+								<td>
+									{{ travelDate.dateDeparture|date('Y-m-d h:i') }}
+								</td>
+								<td>
+									{{ travelDate.dateReturn|date('Y-m-d h:i') }}
+								</td>
+								<td>
+									{{ travel.maxPlaces - booked[travelDate.id] }}
+								</td>
+								<td>
+									{% if travel.maxPlaces - booked[travelDate.id] > 0 %}
+										<a class="bouton px-3 py-2 d-inline-block my-1" href="">Book</a>
+									{% else %}
+										Full.
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
 			{% endif %}
+		{% endif %}
+		<h2>Destinations in this travel</h2>
+		{% if travel.itineraries %}
+			<div class="row row-cols-1 row-cols-md-3 mt-3">
+				{% for itinerary in travel.itineraries %}
+					<div class="col mb-4">
+						<a class="no-underline" href="{{ path('destination', {id: itinerary.destination.id}) }}">
+							<div class="card">
+								<img src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Destination" class="card-img-top" alt="Photo of SuperTravel">
+								<div class="card-body">
+									<h4 class="card-title">Day
+										{{ itinerary.dayArrival }}
+										:
+										{{ itinerary.destination.name }}</h4>
+									<p class="card-text">{{ itinerary.destination.description|format_text(100)|raw() }}</p>
+								</div>
+							</div>
+						</a>
+					</div>
+				{% endfor %}
+			</div>
 		{% endif %}
 	{% endif %}
 {% endblock %}

@@ -11,8 +11,6 @@
 	<p>TODO:</p>
 	<ul>
 		<li>images src</li>
-		<li>Links to card</li>
-		<li>Links to complete lists</li>
 	</ul>
 	{% if promotions_list %}
 		<section id="specialDeals">
@@ -51,7 +49,7 @@
 		<div class="text-right my-2">Ordered by : &emsp;
 			<div class="btn-group dropleft">
 				<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Price
+					{{ filtres[order] }}
 				</button>
 				<div class="dropdown-menu">
 					<a href="{{ path('homepage', {page: this_page, order: 'name'}) }}#travelList" class="dropdown-item">Name</a>

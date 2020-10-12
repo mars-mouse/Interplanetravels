@@ -50,24 +50,24 @@ class Itinerary
         return $this->id;
     }
 
-    public function getDayArrival(): ?\DateTimeInterface
+    public function getDayArrival()
     {
         return $this->dayArrival;
     }
 
-    public function setDayArrival(\DateTimeInterface $dayArrival): self
+    public function setDayArrival(int $dayArrival): self
     {
         $this->dayArrival = $dayArrival;
 
         return $this;
     }
 
-    public function getDayDeparture(): ?\DateTimeInterface
+    public function getDayDeparture()
     {
         return $this->dayDeparture;
     }
 
-    public function setDayDeparture(\DateTimeInterface $dayDeparture): self
+    public function setDayDeparture(int $dayDeparture): self
     {
         $this->dayDeparture = $dayDeparture;
 

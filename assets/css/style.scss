@@ -6,6 +6,25 @@ $blue: #83A1B9;
 $dark-blue: #54718E;
 $gold: #FBC523;
 
+.text-black{
+    color: $black;
+}
+
+.text-light-blue{
+    color: $light-blue;
+}
+
+.text-blue{
+    color: $blue;
+}
+
+.text-dark-blue{
+    color: $dark-blue;
+}
+
+.text-gold{
+    color: $gold;
+}
 
 @mixin buttonShader($colorBg, $colorTxt: #fbfbfb, $hover: 1, $dropShadow: 0){
     color: $colorTxt;
@@ -293,6 +312,10 @@ main{
             color: inherit;
             background-color: inherit;
         }
+    }
+
+    #travelDates .bouton{
+        @include buttonShader($light-blue, $dark-blue, 1, 1);
     }
 }
 
