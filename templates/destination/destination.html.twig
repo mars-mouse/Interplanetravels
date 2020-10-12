@@ -1,0 +1,85 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels
+	{% if destination %}
+		-
+		{{ destination.name }}
+	{% endif %}
+{% endblock %}
+
+{% block main %}
+	{% if destination %}
+		<h2>{{ destination.name }}</h2>
+		<img class="my-2" src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Destination" alt="placeholder">
+		<p>{{ destination.description }}</p>
+		{% if travels_list %}
+			<section id="travelList">
+				<h2>Travels available for this destination</h2>
+				<div class="text-right my-2">Ordered by : &emsp;
+					<div class="btn-group dropleft">
+						<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							{{ filtres[order] }}
+						</button>
+						<div class="dropdown-menu">
+							<a href="{{ path('destination', {id: destination.id, page: this_page, order: 'name'}) }}#travelList" class="dropdown-item">Name</a>
+							<a href="{{ path('destination', {id: destination.id, page: this_page, order: 'dateDeparture'}) }}#travelList" class="dropdown-item">Date</a>
+							<a href="{{ path('destination', {id: destination.id, page: this_page, order: 'price'}) }}#travelList" class="dropdown-item">Price</a>
+						</div>
+					</div>
+				</div>
+				<div class="row row-cols-1 row-cols-md-3">
+					{% for travel in travels_list %}
+						<div class="col mb-4">
+							<a class="no-underline" href="{{ path('travel', {id: travel.id}) }}">
+								<div class="card">
+									<img src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Travel" class="card-img-top" alt="Photo of SuperTravel">
+									<div class="card-body">
+										<h4 class="card-title">{{ travel.name }}</h4>
+										<p class="card-text">{{ travel.description|format_text(100)|raw() }}</p>
+									</div>
+								</div>
+							</a>
+						</div>
+					{% endfor %}
+				</div>
+				{% if max_pages > 1 %}
+					<ul
+						id="pagination" class="pagination pagination-sm justify-content-center">
+						{# « arrow  #}
+						{% if this_page - 1 < 1 %}
+							{% set page_voulue = 1 %}
+						{% else %}
+							{% set page_voulue = this_page - 1 %}
+						{% endif %}
+						<li {{ this_page == 1 ? 'class="page-item disabled"' : 'class="page-item"' }}>
+							<a class="page-link" href="{{ path('destination', {id: destination.id, page: page_voulue}|merge(app.request.query.all)) }}#travelList">«</a>
+						</li>
+
+						{# Numéros de page du range #}
+						{% for item in range %}
+							{% if item == '...' %}
+								<li class="page-item disabled">
+									<div class="page-link">...</div>
+								</li>
+							{% else %}
+								<li {{ this_page == item ? 'class="page-item active"' : 'class="page-item "'}}>
+									<a class="page-link" href="{{ path('destination', {id: destination.id, page: item}|merge(app.request.query.all)) }}#travelList">{{ item }}</a>
+								</li>
+							{% endif %}
+						{% endfor %}
+
+						{# » arrow #}
+						{% if this_page + 1  <= max_pages %}
+							{% set page_voulue2 = this_page + 1 %}
+						{% else %}
+							{% set page_voulue2 = this_page %}
+						{% endif %}
+						<li {{ this_page == max_pages ? 'class="page-item disabled"' : 'class="page-item"' }}>
+							<a class="page-link" href="{{ path('destination', {id: destination.id, page: page_voulue2}|merge(app.request.query.all)) }}#travelList">»</a>
+						</li>
+					</ul>
+				{% endif %}
+			</section>
+		{% endif %}
+	{% endif %}
+{% endblock %}

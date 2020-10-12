@@ -1,0 +1,46 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Register
+{% endblock %}
+
+{% block main %}
+	{% for flashError in app.flashes('verify_email_error') %}
+		<div class="alert alert-danger" role="alert">{{ flashError }}</div>
+	{% endfor %}
+
+	<h2>Register</h2>
+	{{ form_start(registrationForm, {attr: {class: 'container'}}) }}
+
+	<div class="form-row">
+		<div class="form-group col-6">
+			{{ form_row(registrationForm.firstName, {attr: {class: 'form-control'}}) }}
+		</div>
+		<div class="form-group col-6">
+			{{ form_row(registrationForm.lastName, {attr: {class: 'form-control'}}) }}
+		</div>
+		<div class="form-group col-6">
+			{{ form_row(registrationForm.email, {attr: {class: 'form-control'}}) }}
+		</div>
+		<div class="form-group col-6">
+			{{ form_row(registrationForm.phone, {attr: {class: 'form-control'}}) }}
+		</div>
+		<div class="form-group col-12">
+			{{ form_row(registrationForm.plainPassword) }}
+		</div>
+
+		{% set terms_link %}<a title="Read the  Terms of Use" href="" class="text-dark-blue">Terms of Use</a>
+		{% endset %}
+		{% set terms_of_use %}{{ 'I have read and accept the %terms_of_use%.'|trans({ '%terms_of_use%': terms_link })|raw }}{% endset %}
+		<div class="form-group">
+			{{ form_errors(registrationForm.agreeTerms) }}
+			{{ form_widget(registrationForm.agreeTerms) }}
+			<label for="{{ registrationForm.agreeTerms.vars.id }}">{{ terms_of_use|raw }}</label>
+			{{ form_label(registrationForm.agreeTerms) }}
+		</div>
+
+	</div>
+	<button type="submit" class="bouton">Register</button>
+	{{ form_end(registrationForm) }}
+
+
+{% endblock %}
