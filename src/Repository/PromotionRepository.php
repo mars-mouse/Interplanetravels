@@ -6,7 +6,6 @@ use App\Entity\Promotion;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @method Promotion|null find($id, $lockMode = null, $lockVersion = null)

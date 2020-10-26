@@ -6,9 +6,12 @@ use App\Repository\DestinationRepository;
 use App\Repository\ItineraryRepository;
 use App\Repository\TravelDateRepository;
 use App\Repository\TravelRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class ApiController extends AbstractController
 {
@@ -84,5 +87,53 @@ class ApiController extends AbstractController
         }
 
         return new JsonResponse($allDestinationsJSON);
+    }
+
+    /**
+     * @IsGranted("ROLE_USER")
+     * @Route("/api/saved_payments", name="api_saved_payments")
+     */
+    public function apiSavedPayments(Security $security, UserRepository $userRepository)
+    {
+        // on va chercher les SavedPayments du User connecté
+        $paymentsArray = [];
+
+        // On récupère l'utilisateur connecté
+        // D'abord l'objet user security
+        $connectedUser = $security->getUser();
+        $email = $connectedUser->getUsername();
+        // de ces infos on récupère l'entité User correspondante
+        $user = $userRepository->findOneBy(['email' => $email]);
+
+        if ($user) {
+            // on récupère tous les SavedPayments de l'utilisateur
+            $savedPayments = $user->getSavedPayments();
+
+            // on parcourt les SavedPayments
+            $paymentDetails = [];
+            foreach ($savedPayments as $savedPayment) {
+                // on récupère le Payment correspondant au SavedPayment
+                $payment = $savedPayment->getPayment();
+
+                // on prépare une array avec les infos du payment utiles pour remplir le formulaire
+                $paymentDetails = [
+                    'id' => $savedPayment->getId(),
+                    'name' => $savedPayment->getName(),
+                    'fullName' => $payment->getfullName(),
+                    'addressBilling' => $payment->getAddressBilling(),
+                    'addressDelivery' => $payment->getAddressDelivery(),
+                    'cardNumber' => $payment->getCardNumber(),
+                    'cardType' => $payment->getCardType(),
+                    'crypto' => $payment->getCrypto(),
+                    'dateExpiration' => $payment->getDateExpiration(),
+                ];
+
+                // on ajoute les infos de ces SavedPayment + Payment à la liste
+                $paymentsArray[] = $paymentDetails;
+            }
+        }
+        $savedPaymentsJSON = json_encode($paymentsArray);
+
+        return new JsonResponse($savedPaymentsJSON);
     }
 }

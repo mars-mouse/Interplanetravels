@@ -44,7 +44,7 @@ class BookingRepository extends ServiceEntityRepository
             ->select('SUM(b.numberPlaces)')
             ->andWhere('b.validated = true')
             ->innerJoin('b.travelDate', 'td')
-            ->andWhere('td.travel = :val')
+            ->andWhere('td.id = :val')
             ->setParameter('val', $travelDate->getId())
             ->getQuery()
             ->getSingleScalarResult();

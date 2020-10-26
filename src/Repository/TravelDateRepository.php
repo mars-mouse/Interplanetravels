@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Travel;
 use App\Entity\TravelDate;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +49,35 @@ class TravelDateRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * Renvoie le montant de la promotion sur le voyage concerné par la TravelDate donnée
+     */
+    public function findPromotionAmount(TravelDate $travelDate)
+    {
+        return $this->createQueryBuilder('td')
+            ->select('p.amount')
+            ->innerJoin('td.travel', 't')
+            ->innerJoin('t.promotion', 'p')
+            ->andWhere('td.id = :tdate')
+            ->setParameter('tdate', $travelDate->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Renvoie les TravelDates valable à la date actuelle pour le Travel donné
+     */
+    public function findAvailableByTravel(Travel $travel)
+    {
+        $currentDate = new DateTime();
+
+        return $this->createQueryBuilder('td')
+            ->andWhere('td.travel = :tr')
+            ->setParameter('tr', $travel->getId())
+            ->andWhere('td.dateDeparture > :cd')
+            ->setParameter('cd', $currentDate)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -18,7 +18,7 @@
 				<a href="{{ path('app_login') }}">Sign in</a>&emsp;<button type="button">Sign up</button>
 			{% endif %}
 		{% else %}
-			{% if travel.travelDates %}
+			{% if travelDate_list %}
 				<table id="travelDates" class="table">
 					<thead class="thead-light">
 						<tr>
@@ -29,7 +29,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for travelDate in travel.travelDates %}
+						{% for travelDate in travelDate_list %}
 							<tr>
 								<td>
 									{{ travelDate.dateDeparture|date('Y-m-d h:i') }}
@@ -42,7 +42,7 @@
 								</td>
 								<td>
 									{% if travel.maxPlaces - booked[travelDate.id] > 0 %}
-										<a class="bouton px-3 py-2 d-inline-block my-1" href="">Book</a>
+										<a class="bouton px-3 py-2 d-inline-block my-1" href="{{ path('booking', {id: travelDate.id}) }}">Book</a>
 									{% else %}
 										Full.
 									{% endif %}

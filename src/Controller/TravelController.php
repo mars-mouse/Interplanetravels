@@ -28,8 +28,8 @@ class TravelController extends AbstractController
      */
     public function travel(Travel $travel, BookingRepository $bookingRepository, TravelDateRepository $travelDateRepository)
     {
-        // on récupère les dates du voyage
-        $travelDates = $travelDateRepository->findBy(['travel' => $travel]);
+        // on récupère les TravelDates encore valable aujourd'hui pour le Travel
+        $travelDates = $travelDateRepository->findAvailableByTravel($travel);
 
         // on fait un tableau du nombre de places réservées par date de voyage
         $booked = [];
@@ -43,6 +43,7 @@ class TravelController extends AbstractController
 
         return $this->render('travel/travel.html.twig', [
             'travel' => $travel,
+            'travelDate_list' => $travelDates,
             'booked' => $booked,
         ]);
     }

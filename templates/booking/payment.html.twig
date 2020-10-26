@@ -1,0 +1,87 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Payment
+{% endblock %}
+
+{% block main %}
+	<h2>{{ booking.travelDate.travel.name }}</h2>
+	<p>Date of Departure :
+		{{ booking.travelDate.dateDeparture|date('Y-m-d h:i') }}
+		<br>
+		Date of Return :
+		{{ booking.travelDate.dateReturn|date('Y-m-d h:i') }}
+		<br>
+		Reserved places :
+		{{ booking.numberPlaces }}
+		<br>
+		Total price
+		{% set unit_price = booking.travelDate.travel.price %}
+		{% if booking.travelDate.travel.promotion is not null %}
+			{% set unit_price = unit_price * (100 - booking.travelDate.travel.promotion.amount) / 100 %}
+			(including a -{{ booking.travelDate.travel.promotion.amount }}% promotion)
+		{% endif %}
+		:
+		{{ (unit_price * booking.numberPlaces / 100)|format_currency('USD') }}
+	</p>
+	<h2>Payment</h2>
+	<form class="container">
+		<div class="form-row">
+			<div class="form-group col-6">
+				<label for="savedPayments">Saved payment details for
+					{{ (app.user.firstName ~ ' ' ~ app.user.lastName) }}</label>
+				<select name="savedPaymentsSelection" id="savedPayments" class="form-control">
+					<option value="-1">New</option>
+					{% for savedPayment in app.user.savedPayments %}
+						<option value={{ savedPayment.id }}>{{ savedPayment.name }}</option>
+					{% endfor %}
+				</select>
+				<div id="savedPaymentsError"></div>
+			</div>
+			<div class="form-group col-3">
+				<img src="https://via.placeholder.com/60x60/FFFFFF/888888?text=…" alt="loading icon" id="loadingIcon" class="d-none">
+				<label>&nbsp;</label><br>
+				<button id="loadPayment" type="button" class="d-none">Load</button>
+			</div>
+		</div>
+	</form>
+	<ul></ul>
+
+	{{ form_start(paymentForm, {attr: {class: 'container'}}) }}
+	<fieldset class="show">
+		<div class="form-row">
+			<div class="form-group col-2">
+				{{ form_row(paymentForm.cardType, {attr: {class: 'form-control'}}) }}
+			</div>
+			<div class="form-group col-8">
+				{{ form_row(paymentForm.cardNumber, {attr: {class: 'form-control'}}) }}
+			</div>
+			<div class="form-group col-2">
+				{{ form_row(paymentForm.crypto, {attr: {class: 'form-control'}}) }}
+			</div>
+			<div class="form-group col-8">
+				{{ form_row(paymentForm.fullName, {attr: {class: 'form-control', value: (app.user.firstName ~ ' ' ~ app.user.lastName) }}) }}
+			</div>
+			<div class="form-group col-4">
+				{{ form_label(paymentForm.dateExpiration) }}
+				{{ form_errors(paymentForm.dateExpiration) }}
+				<div class="form-row">
+					{{ form_widget(paymentForm.dateExpiration.day, {'attr': { 'style': 'display:none'}}) }}
+					{{ form_widget(paymentForm.dateExpiration.month, {'attr': {class: 'form-control col-6' }}) }}
+					{{ form_widget(paymentForm.dateExpiration.year, {'attr': {class: 'form-control col-6' }}) }}
+				</div>
+			</div>
+			<div class="form-group col-12">
+				{{ form_row(paymentForm.addressBilling, {attr: {class: 'form-control'}}) }}
+			</div>
+			<div class="form-group col-12">
+				{{ form_row(paymentForm.addressDelivery, {attr: {class: 'form-control'}}) }}
+			</div>
+		</div>
+		<button type="submit" class="bouton">Proceed</button>
+	</fieldset>
+	{{ form_end(paymentForm) }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('savedPaymentLoading') }}
+{% endblock %}

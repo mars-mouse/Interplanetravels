@@ -1,0 +1,67 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Payment Recap
+{% endblock %}
+
+{% block main %}
+	<h2>{{ booking.travelDate.travel.name }}</h2>
+	<p>Date of Departure :
+		{{ booking.travelDate.dateDeparture|date('Y-m-d h:i') }}
+		<br>
+		Date of Return :
+		{{ booking.travelDate.dateReturn|date('Y-m-d h:i') }}
+		<br>
+		Reserved places :
+		{{ booking.numberPlaces }}
+		<br>
+		Paid :
+		{{ (booking.paidAmount / 100)|format_currency('USD') }}
+		{% if booking.promotionValue > 0 %}
+			(includes a -{{ booking.promotionValue }}% promotion)
+		{% endif %}
+	</p>
+	<h2>Payment details</h2>
+	<p>Card Type :
+		{{ booking.payment.cardType }}
+		<br>
+		Card Number :
+		{{ booking.payment.cardNumber|slice(0,4) }}
+		**** **** ****<br>
+		Expiration date :
+		{{ booking.payment.dateExpiration|date('m/Y') }}
+		<br>
+		Full name :
+		{{ booking.payment.fullName }}
+		<br>
+		Billing Address :
+		{{ booking.payment.addressBilling }}
+		<br>
+		Delivery Address :
+		{{ booking.payment.addressDelivery }}
+	</p>
+	{% if existingPayment is null %}
+		{% if isPaymentRegistered %}
+			<p>Your payment details have been saved.</p>
+		{% else %}
+			<p>Do you want to save these details for future payments?</p>
+			<form method="POST" class="container">
+				<div class="form-row">
+					<div class="form-group col-12">
+						<label for="savedPaymentName">Give a name for these payment details</label>
+						<input id="savedPaymentName" name="savedPaymentName" type="text" class="form-control" value="{{ booking.payment.cardType }} {{ booking.payment.cardNumber|slice(0,4) }}"/>
+					</div>
+				</div>
+				<div>{{ paymentNameError }}</div>
+				<button type="submit">Save</button>
+			</form>
+		{% endif %}
+	{% else %}
+		<p>Payment details saved in
+			<strong>{{ existingPayment.savedPayment.name }}</strong>.
+		</p>
+	{% endif %}
+	<p>
+		<a href="{{ path('homepage') }}">Back to homepage</a>
+	</p>
+
+{% endblock %}

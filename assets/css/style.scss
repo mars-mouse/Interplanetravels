@@ -317,6 +317,12 @@ main{
     #travelDates .bouton{
         @include buttonShader($light-blue, $dark-blue, 1, 1);
     }
+
+    fieldset.show{
+        border: 1px solid rgba($black, 0.4);
+        border-radius: 5px;
+        padding: 15px;
+    }
 }
 
 footer{

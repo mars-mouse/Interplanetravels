@@ -1,0 +1,48 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Booking
+{% endblock %}
+
+{% block main %}
+	<h2>{{ travelDate.travel.name }}</h2>
+	<p>Date of Departure :
+		{{ travelDate.dateDeparture|date('Y-m-d h:i') }}
+		<br>
+		Date of Return :
+		{{ travelDate.dateReturn|date('Y-m-d h:i') }}
+		<br>
+		Remaining places :
+		{{ travelDate.travel.maxPlaces - booked }}
+	</p>
+	<h2>Booking</h2>
+	<p>{{ app.user.firstName }}
+		{{ app.user.lastName }}</p>
+	{{ form_start(bookingForm, {attr: {class: 'container'}}) }}
+	<div class="form-row">
+		<div class="form-group col-3" id="numberPlaces">
+			{{ form_row(bookingForm.numberPlaces, {attr: {class: 'form-control', min: 1, max: (travelDate.travel.maxPlaces - booked)}}) }}
+		</div>
+		<div class="form-group col-3">
+			<label for="unitPrice">Price per place</label>
+			<input type="text" id="unitPrice" name="unitPrice" class="form-control" value="{{ (travelDate.travel.price / 100)|format_currency('USD') }}" data-value={{ (travelDate.travel.price / 100) }} disabled/>
+		</div>
+		{% set total_price = travelDate.travel.price %}
+		{% if travelDate.travel.promotion is not null %}
+			<div class="form-group col-3">
+				<label for="promotionValue">Promotion</label>
+				<input type="text" id="promotionValue" name="promotionValue" class="form-control" value="{{ travelDate.travel.promotion.amount }}%" data-value={{ travelDate.travel.promotion.amount }} disabled/>
+			</div>
+			{% set total_price = total_price * (100 - travelDate.travel.promotion.amount) / 100 %}
+		{% endif %}
+		<div class="form-group col-3">
+			<label for="totalPrice">Total Price</label>
+			<input type="text" id="totalPrice" name="totalPrice" class="form-control" value="{{ (total_price * bookingForm.numberPlaces.vars.value / 100)|format_currency('USD') }}" disabled/>
+		</div>
+	</div>
+	<button type="submit" class="bouton">Book</button>
+	{{ form_end(bookingForm) }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('priceCalc') }}
+{% endblock %}
