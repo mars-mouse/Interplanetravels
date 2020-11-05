@@ -1,0 +1,147 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels -
+	{{ app.user.firstName }}
+	{{ app.user.lastName }}'s Profile
+{% endblock %}
+
+{% block main %}
+	<section>
+		<h2>Profile</h2>
+		<p>First Name :
+			{{ app.user.firstName }}</p>
+		<p>Last Name :
+			{{ app.user.lastName }}</p>
+		<p>Email :
+			{{ app.user.email }}</p>
+		<p>Phone :
+			{{ app.user.phone }}</p>
+		<p>Bookmarks - Booking History</p>
+		<h2>Coming Travels</h2>
+		{% if booked_list %}
+			<h3>Booked</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Travel</th>
+						<th>Date Departure</th>
+						<th>Date Return</th>
+						<th>Places</th>
+						<th>Total Price</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for booking in booked_list %}
+						<tr>
+							<td>{{ booking.travelDate.travel.name }}</td>
+							<td>{{ booking.travelDate.dateDeparture|date('Y-m-d h:i') }}</td>
+							<td>{{ booking.travelDate.dateReturn|date('Y-m-d h:i') }}</td>
+							<td>{{ booking.numberPlaces }}</td>
+							<td>{{ (booking.paidAmount / 100)|format_currency('USD') }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+		{% if pending_list %}
+			<h3>Booking still pending</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Travel</th>
+						<th>Date Departure</th>
+						<th>Date Return</th>
+						<th>Wanted Places</th>
+						<th>Places Remaining</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for pbooking in pending_list %}
+						<tr>
+							<td>{{ pbooking.travelDate.travel.name }}</td>
+							<td>{{ pbooking.travelDate.dateDeparture|date('Y-m-d h:i') }}</td>
+							<td>{{ pbooking.travelDate.dateReturn|date('Y-m-d h:i') }}</td>
+							<td>{{ pbooking.numberPlaces }}</td>
+							<td>
+								{% if (pbooking.travelDate.travel.maxPlaces - booked[pbooking.travelDate.id]) > 0 %}
+									{{ pbooking.travelDate.travel.maxPlaces - booked[pbooking.travelDate.id] }}
+								{% else %}
+									<em class="text-red">
+										Full!
+									</em>
+								{% endif %}
+							</td>
+							<td>
+								{% if (pbooking.travelDate.travel.maxPlaces - booked[pbooking.travelDate.id]) >= pbooking.numberPlaces %}
+									<a href="{{ path('payment', {id: pbooking.id}) }}">Complete Booking</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	</section>
+
+	<section id="savedPaymentsSection">
+		<h2>Saved Payments</h2>
+		{% include "booking/savedpayment.html.twig" %}
+
+		{{ form_start(paymentForm, {attr: {class: 'container'}}) }}
+		<fieldset class="show">
+			<div class="form-row">
+				<div class="form-group col-12">
+					<label for="savedPaymentName">Name for the saved payment :</label>
+					<input id="savedPaymentName" name="savedPaymentName" type="text" class="form-control">
+					{% for message in app.flashes('nameError') %}
+						<div class="alert alert-danger">
+							{{ message }}
+						</div>
+					{% endfor %}
+				</div>
+				<div class="form-group col-2">
+					{{ form_row(paymentForm.cardType, {attr: {class: 'form-control'}}) }}
+				</div>
+				<div class="form-group col-8">
+					{{ form_row(paymentForm.cardNumber, {attr: {class: 'form-control'}}) }}
+				</div>
+				<div class="form-group col-2">
+					{{ form_row(paymentForm.crypto, {attr: {class: 'form-control'}}) }}
+				</div>
+				<div class="form-group col-8">
+					{{ form_row(paymentForm.fullName, {attr: {class: 'form-control', 
+					value: (app.user.firstName ~ ' ' ~ app.user.lastName) }}) }}
+				</div>
+				<div class="form-group col-4">
+					{{ form_label(paymentForm.dateExpiration) }}
+					{{ form_errors(paymentForm.dateExpiration) }}
+					<div class="form-row">
+						{{ form_widget(paymentForm.dateExpiration.day, {'attr': { 'style': 'display:none'}}) }}
+						{{ form_widget(paymentForm.dateExpiration.month, {'attr': {class: 'form-control col-6' }}) }}
+						{{ form_widget(paymentForm.dateExpiration.year, {'attr': {class: 'form-control col-6' }}) }}
+					</div>
+				</div>
+				<div class="form-group col-12">
+					{{ form_row(paymentForm.addressBilling, {attr: {class: 'form-control'}}) }}
+				</div>
+				<div class="form-group col-12">
+					{{ form_row(paymentForm.addressDelivery, {attr: {class: 'form-control'}}) }}
+				</div>
+			</div>
+			<div class="form-row col-12">
+				<div class="form-group col-3">
+					<button id="savePayment" name="savePayment" type="submit" class="bouton d-block" value="save">Save</button>
+				</div>
+				<div class="form-group col-3">
+					<button id="deletePayment" name="deletePayment" type="submit" class="bouton d-none" value="delete">Delete</button>
+				</div>
+			</div>
+		</fieldset>
+		{{ form_end(paymentForm) }}
+	</section>
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('savedPaymentLoading') }}
+{% endblock %}

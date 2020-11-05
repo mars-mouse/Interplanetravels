@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PaymentFormType extends AbstractType
@@ -57,7 +58,13 @@ class PaymentFormType extends AbstractType
                 'format' => 'ddMMMyyyy',
                 'days' => [1],
                 'constraints' => [
-                    new NotBlank(['message' => 'Please enter an expiration date.'])
+                    new NotBlank(
+                        ['message' => 'Please enter an expiration date.']
+                    ),
+                    new GreaterThanOrEqual([
+                        'value' => 'today',
+                        'message' => 'Please enter a valid expiration date.'
+                    ]),
                 ]
             ])
             ->add('fullName', TextType::class, [

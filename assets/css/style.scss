@@ -5,6 +5,7 @@ $light-blue: #DEE8EE;
 $blue: #83A1B9;
 $dark-blue: #54718E;
 $gold: #FBC523;
+$red: rgb(210, 10, 10);
 
 .text-black{
     color: $black;
@@ -24,6 +25,10 @@ $gold: #FBC523;
 
 .text-gold{
     color: $gold;
+}
+
+.text-red{
+    color: $red;
 }
 
 @mixin buttonShader($colorBg, $colorTxt: #fbfbfb, $hover: 1, $dropShadow: 0){

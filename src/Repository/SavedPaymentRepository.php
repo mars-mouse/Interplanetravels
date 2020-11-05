@@ -36,15 +36,15 @@ class SavedPaymentRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?SavedPayment
+    /**
+     * Renvoie le SavedPayment ayant le nom spécifié ou null si aucun ne correspond
+     */
+    public function findOneByName($name): ?SavedPayment
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('s.name = :val')
+            ->setParameter('val', $name)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
 }
