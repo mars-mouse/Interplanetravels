@@ -15,9 +15,9 @@ use App\Repository\SavedPaymentRepository;
 use App\Repository\TravelDateRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -157,13 +157,6 @@ class BookingController extends AbstractController
             // $dateExpiration;
             // $fullName;
 
-            // Vérification de la date d'expiration
-            $currentDate = new DateTime();
-
-            if ($payment->getDateExpiration() < $currentDate) {
-                // Carte expirée
-            }
-
             // Propriétés relationnelles
             // $booking;
             // $savedPayment; (doit rester null pour l'historique de paiement)
@@ -188,6 +181,8 @@ class BookingController extends AbstractController
             $booking->setPromotionValue($promotionValue);
             $booking->setValidated(true);
             $booking->setPayment($payment);
+            $currentDate = new DateTime();
+            $booking->setDate($currentDate);
 
             // Doctrine met à jour la BD
             $entityManager->persist($payment);

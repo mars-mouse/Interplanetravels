@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Booking;
 use App\Entity\TravelDate;
+use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -50,15 +52,39 @@ class BookingRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    /*
-    public function findOneBySomeField($value): ?Booking
+    /**
+     * @return Booking[] Renvoie les Bookings validés à venir de l'utilisateur
+     */
+    public function comingBookings(User $user)
     {
+        $currentDate = new DateTime();
+
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
+            ->innerJoin('b.travelDate', 'td')
+            ->andWhere('td.dateDeparture > :cd')
+            ->setParameter('cd', $currentDate)
+            ->andWhere('b.validated = true')
+            ->andWhere('b.user = :u')
+            ->setParameter('u', $user)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
+
+    /**
+     * @return Booking[] Renvoie les Bookings non-validés à venir de l'utilisateur
+     */
+    public function pendingBookings(User $user)
+    {
+        $currentDate = new DateTime();
+
+        return $this->createQueryBuilder('b')
+            ->innerJoin('b.travelDate', 'td')
+            ->andWhere('td.dateDeparture > :cd')
+            ->setParameter('cd', $currentDate)
+            ->andWhere('b.validated = false')
+            ->andWhere('b.user = :u')
+            ->setParameter('u', $user)
+            ->getQuery()
+            ->getResult();
+    }
 }
