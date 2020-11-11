@@ -10,12 +10,16 @@
 		<p>{{ travel.description }}</p>
 		{% if travel.maxPlaces == 0 %}
 			<p>This travel is currently unavailable.</p>
+			{% for message in app.flashes('bookmarkSuccess') %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
 			{% if app.user %}
 				<p>If you want to be alerted when it becomes available, bookmark it!</p>
-				<button type="button">Bookmark</button>
+				<button type="submit" class="bouton" name="bookmark">Bookmark</button>
 			{% else %}
 				<p>Sign in to be able to bookmark it and be alerted when it becomes available!</p>
-				<a href="{{ path('app_login') }}">Sign in</a>&emsp;<button type="button">Sign up</button>
 			{% endif %}
 		{% else %}
 			{% if travelDate_list %}

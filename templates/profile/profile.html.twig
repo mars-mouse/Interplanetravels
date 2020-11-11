@@ -87,6 +87,11 @@
 	<section id="savedPaymentsSection">
 		<h2>Saved Payments</h2>
 		{% include "booking/savedpayment.html.twig" %}
+		{% for message in app.flashes('saveSuccess') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
 
 		{{ form_start(paymentForm, {attr: {class: 'container'}}) }}
 		<fieldset class="show">

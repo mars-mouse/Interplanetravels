@@ -1,0 +1,38 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels -
+	{{ app.user.firstName }}
+	{{ app.user.lastName }}'s Bookmarks
+{% endblock %}
+
+{% block main %}
+	<section>
+		<h2>Bookmarks</h2>
+		<table class="table">
+			<thead>
+				<th>Travel</th>
+				<th>Available</th>
+				<th>Alert</th>
+			</thead>
+			<tbody>
+				{% for bookmark in app.user.bookmarks %}
+					<td>
+						<a href="{{ path('travel', {id: bookmark.travel.id}) }}">{{ bookmark.travel.name }}</a>
+					</td>
+					<td>
+						{% if bookmark.travel.maxPlaces > 0 %}Yes
+						{% else %}
+							No
+						{% endif %}
+					</td>
+					<td>
+						{% if bookmark.alert %}Yes
+						{% else %}
+							No
+						{% endif %}
+					</td>
+				{% endfor %}
+			</tbody>
+		</table>
+	</section>
+{% endblock %}

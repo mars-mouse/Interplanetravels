@@ -6,6 +6,7 @@ use App\Entity\Payment;
 use App\Entity\SavedPayment;
 use App\Form\PaymentFormType;
 use App\Repository\BookingRepository;
+use App\Repository\BookmarkRepository;
 use App\Repository\SavedPaymentRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -99,6 +100,11 @@ class ProfileController extends AbstractController
                     $entityManager->persist($payment);
                     $entityManager->persist($savedPayment);
                     $entityManager->flush();
+
+                    // Le SavedPayment a été enregistré, on réinitialise la page
+                    // pour éviter de proposer de l'enregistrer plusieurs
+                    $this->addFlash('saveSuccess', 'The payment details have been successfully saved.');
+                    return new RedirectResponse($urlGenerator->generate('profile', ['_fragment' => 'savedPaymentsSection']));
                 } else {
                     // Nom non-valide, message d'erreur
                     $this->addFlash('nameError', 'Invalid name. It cannot be an existing name or the name "New".');
@@ -131,6 +137,73 @@ class ProfileController extends AbstractController
             'pending_list' => $pendingBookings,
             'booked' => $booked,
             'paymentForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @IsGranted("ROLE_USER")
+     * @Route("/bookings", name="bookings")
+     */
+    public function bookings(
+        Security $security,
+        UserRepository $userRepository,
+        BookingRepository $bookingRepository
+    ) {
+        $connectedUser = $security->getUser();
+        $email = $connectedUser->getUsername();
+        $user = $userRepository->findOneBy(['email' => $email]);
+
+        if (!$user) {
+            // fail authentication with a custom error
+            throw new CustomUserMessageAuthenticationException('Unknown User.');
+        }
+
+        // Création des listes Booked et Pending
+        $comingBookings = $bookingRepository->comingBookings($user);
+        $pendingBookings = $bookingRepository->pendingBookings($user);
+
+        // on fait un tableau du nombre de places réservées par date de voyage
+        $booked = [];
+        foreach ($pendingBookings as $booking) {
+            // s'il n'y a pas de réservation pour cette date, cela renvoie null
+            // si c'est null on veut plutôt 0 (0 place réservée)
+            $sumBookedPlaces = $bookingRepository->sumBookedPlaces($booking->getTravelDate()) ?? 0;
+            // on enregistre dans la clef correspondant à l'id de la date
+            $booked[$booking->getTravelDate()->getId()] = $sumBookedPlaces;
+        }
+
+        // Création de l'historique des voyages effectués (date passée + confirmé)
+        $pastBookings = $bookingRepository->pastBookings($user);
+
+
+        return $this->render('profile/bookings.html.twig', [
+            'booked_list' => $comingBookings,
+            'pending_list' => $pendingBookings,
+            'booked' => $booked,
+            'pastBookings_list' => $pastBookings,
+        ]);
+    }
+
+    /**
+     * @IsGranted("ROLE_USER")
+     * @Route("/bookmarks", name="bookmarks")
+     */
+    public function bookmarks(Security $security, UserRepository $userRepository, BookmarkRepository $bookmarkRepository)
+    {
+        $connectedUser = $security->getUser();
+        $email = $connectedUser->getUsername();
+        $user = $userRepository->findOneBy(['email' => $email]);
+
+        if (!$user) {
+            // fail authentication with a custom error
+            throw new CustomUserMessageAuthenticationException('Unknown User.');
+        }
+
+        // Liste de tous les bookmarks de l'utilisateur
+        $bookmarks = $bookmarkRepository->findBy(['user' => $user]);
+
+        return $this->render('profile/bookmarks.html.twig', [
+            'bookmarks_list' => $bookmarks,
         ]);
     }
 }

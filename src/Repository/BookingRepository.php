@@ -87,4 +87,22 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @return Booking[] Renvoie les anciens Bookings validés de l'utilisateur
+     */
+    public function pastBookings(User $user)
+    {
+        $currentDate = new DateTime();
+
+        return $this->createQueryBuilder('b')
+            ->innerJoin('b.travelDate', 'td')
+            ->andWhere('td.dateDeparture <= :cd')
+            ->setParameter('cd', $currentDate)
+            ->andWhere('b.validated = true')
+            ->andWhere('b.user = :u')
+            ->setParameter('u', $user)
+            ->getQuery()
+            ->getResult();
+    }
 }

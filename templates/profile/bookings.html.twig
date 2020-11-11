@@ -1,0 +1,111 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels -
+	{{ app.user.firstName }}
+	{{ app.user.lastName }}'s Bookings
+{% endblock %}
+
+{% block main %}
+	<section>
+		<h2>Coming Travels</h2>
+		<h3>Booked</h3>
+		{% if booked_list %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Travel</th>
+						<th>Date Departure</th>
+						<th>Date Return</th>
+						<th>Places</th>
+						<th>Total Price</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for booking in booked_list %}
+						<tr>
+							<td>{{ booking.travelDate.travel.name }}</td>
+							<td>{{ booking.travelDate.dateDeparture|date('Y-m-d h:i') }}</td>
+							<td>{{ booking.travelDate.dateReturn|date('Y-m-d h:i') }}</td>
+							<td>{{ booking.numberPlaces }}</td>
+							<td>{{ (booking.paidAmount / 100)|format_currency('USD') }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<p>You haven't any travel booked at the moment. Click
+				<a href="{{ path('travels') }}">here</a>
+				to check our list of travels.</p>
+		{% endif %}
+		{% if pending_list %}
+			<h3>Booking still pending</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Travel</th>
+						<th>Date Departure</th>
+						<th>Date Return</th>
+						<th>Wanted Places</th>
+						<th>Places Remaining</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for pbooking in pending_list %}
+						<tr>
+							<td>{{ pbooking.travelDate.travel.name }}</td>
+							<td>{{ pbooking.travelDate.dateDeparture|date('Y-m-d h:i') }}</td>
+							<td>{{ pbooking.travelDate.dateReturn|date('Y-m-d h:i') }}</td>
+							<td>{{ pbooking.numberPlaces }}</td>
+							<td>
+								{% if (pbooking.travelDate.travel.maxPlaces - booked[pbooking.travelDate.id]) > 0 %}
+									{{ pbooking.travelDate.travel.maxPlaces - booked[pbooking.travelDate.id] }}
+								{% else %}
+									<em class="text-red">
+										Full!
+									</em>
+								{% endif %}
+							</td>
+							<td>
+								{% if (pbooking.travelDate.travel.maxPlaces - booked[pbooking.travelDate.id]) >= pbooking.numberPlaces %}
+									<a href="{{ path('payment', {id: pbooking.id}) }}">Complete Booking</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+		<h2>Past travels</h2>
+		{% if pastBookings_list %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Travel</th>
+						<th>Date Departure</th>
+						<th>Date Return</th>
+						<th>Places</th>
+						<th>Total Price</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for booking in pastBookings_list %}
+						<tr>
+							<td>{{ booking.travelDate.travel.name }}</td>
+							<td>{{ booking.travelDate.dateDeparture|date('Y-m-d h:i') }}</td>
+							<td>{{ booking.travelDate.dateReturn|date('Y-m-d h:i') }}</td>
+							<td>{{ booking.numberPlaces }}</td>
+							<td>{{ (booking.paidAmount / 100)|format_currency('USD') }}</td>
+							<td>
+								<a href="#">Review</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			You currently have no history of travelling with us.
+		{% endif %}
+	</section>
+{% endblock %}
