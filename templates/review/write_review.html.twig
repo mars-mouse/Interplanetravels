@@ -1,0 +1,23 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Review
+{% endblock %}
+
+{% block main %}
+	<h2>Review for
+		<a href="{{ path('travel', {id: travel.id}) }}">{{ travel.name }}</a>
+	</h2>
+	<p>By
+		{{ app.user.firstName }}
+		{{ app.user.lastName }}</p>
+	{{ form_start(reviewForm, {attr: {class: 'container'}}) }}
+	<div class="form-row">
+		<div class="form-group col-6">
+			{{ form_row(reviewForm.note, {attr: {class: 'form-control'}}) }}
+		</div>
+		<div class="form-group col-12">
+			{{ form_row(reviewForm.comment, {attr: {class: 'form-control'}}) }}
+		</div>
+	</div>
+	{{ form_end(reviewForm) }}
+{% endblock %}

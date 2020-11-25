@@ -1,0 +1,16 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Review
+{% endblock %}
+
+{% block main %}
+	<h2>Review for
+		<a href="{{ path('travel', {id: review.travel.id}) }}">{{ review.travel.name }}</a>
+	</h2>
+	<p>By
+		{{ review.user.firstName }}
+		{{ review.user.lastName }}</p>
+	<h3>Note :
+		{{ review.note }}</h3>
+	<p>{{ review.comment }}</p>
+{% endblock %}
