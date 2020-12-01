@@ -1,0 +1,97 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - New Travel Dates
+{% endblock %}
+
+{% block main %}
+	<section>
+		<h2>Travel</h2>
+		<h3>{{ travel.name }}</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Destination</th>
+					<th>Day Arrival</th>
+					<th>Day Departure</th>
+					<th>Transport</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for itinerary in travel.itineraries %}
+					<tr>
+						<td>{{ itinerary.destination.name }}</td>
+						<td>{{ itinerary.dayArrival }}</td>
+						<td>{{ itinerary.dayDeparture }}</td>
+						<td>{{ itinerary.transport.name }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</section>
+	<section id="traveldates">
+		<h2>Travel Dates</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Date Departure</th>
+					<th>Date Return</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for travelDate in travel.travelDates %}
+					<tr>
+						<td>{{ travelDate.dateDeparture|date('Y-m-d H:i') }}</td>
+						<td>{{ travelDate.dateReturn|date('Y-m-d H:i') }}</td>
+						<td>
+							<a href="{{ path('backoffice_delete_traveldate', {id: travelDate.id}) }}">Delete</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% for flashSuccess in app.flashes('successDates') %}
+			<div class="alert alert-success" role="alert">{{ flashSuccess }}</div>
+		{% endfor %}
+		{% for flashError in app.flashes('errorDates') %}
+			<div class="alert alert-danger" role="alert">{{ flashError }}</div>
+		{% endfor %}
+		<h3>New Travel Date</h3>
+		{{ form_start(travelDateForm) }}
+		<div class="form-row">
+			<div class="form-group col-5">
+				{{ form_label(travelDateForm.dateDeparture) }}
+				{{ form_errors(travelDateForm.dateDeparture) }}
+				<div class="form-row">
+					<div class="form-row col-7">
+						{{ form_widget(travelDateForm.dateDeparture.date.year, {'attr': { class: 'form-control col-4' }}) }}
+						{{ form_widget(travelDateForm.dateDeparture.date.month, {'attr': { class: 'form-control col-4' }}) }}
+						{{ form_widget(travelDateForm.dateDeparture.date.day, {'attr': { class: 'form-control col-4' }}) }}
+					</div>
+					<div class="form-row col-5">
+						{{ form_widget(travelDateForm.dateDeparture.time.hour, {'attr': { class: 'form-control col-6' }}) }}
+						{{ form_widget(travelDateForm.dateDeparture.time.minute, {'attr': { class: 'form-control col-6' }}) }}
+					</div>
+				</div>
+			</div>
+			<div class="col-2">to</div>
+			<div class="form-group col-5">
+				{{ form_label(travelDateForm.dateReturn) }}
+				{{ form_errors(travelDateForm.dateReturn) }}
+				<div class="form-row">
+					<div class="form-row col-7">
+						{{ form_widget(travelDateForm.dateReturn.date.year, {'attr': { class: 'form-control col-4' }}) }}
+						{{ form_widget(travelDateForm.dateReturn.date.month, {'attr': { class: 'form-control col-4' }}) }}
+						{{ form_widget(travelDateForm.dateReturn.date.day, {'attr': { class: 'form-control col-4' }}) }}
+					</div>
+					<div class="form-row col-5">
+						{{ form_widget(travelDateForm.dateReturn.time.hour, {'attr': { class: 'form-control col-6' }}) }}
+						{{ form_widget(travelDateForm.dateReturn.time.minute, {'attr': { class: 'form-control col-6' }}) }}
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="bouton">Add Travel Date</button>
+		</div>
+		{{ form_end(travelDateForm) }}
+	</section>
+{% endblock %}

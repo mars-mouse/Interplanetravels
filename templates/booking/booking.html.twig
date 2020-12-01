@@ -6,10 +6,10 @@
 {% block main %}
 	<h2>{{ travelDate.travel.name }}</h2>
 	<p>Date of Departure :
-		{{ travelDate.dateDeparture|date('Y-m-d h:i') }}
+		{{ travelDate.dateDeparture|date('Y-m-d H:i') }}
 		<br>
 		Date of Return :
-		{{ travelDate.dateReturn|date('Y-m-d h:i') }}
+		{{ travelDate.dateReturn|date('Y-m-d H:i') }}
 		<br>
 		Remaining places :
 		{{ travelDate.travel.maxPlaces - booked }}

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Travel;
 use App\Entity\TravelDate;
+use App\Entity\User;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -76,6 +77,24 @@ class TravelDateRepository extends ServiceEntityRepository
             ->andWhere('td.travel = :tr')
             ->setParameter('tr', $travel->getId())
             ->andWhere('td.dateDeparture > :cd')
+            ->setParameter('cd', $currentDate)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Renvoie les TravelDates passées du Travel donné pour le User
+     */
+    public function findPastTravels(Travel $travel, User $user)
+    {
+        $currentDate = new DateTime();
+
+        return $this->createQueryBuilder('td')
+            ->andWhere('td.travel = :tr')
+            ->setParameter('tr', $travel->getId())
+            ->andWhere('td.user = :u')
+            ->setParameter('u', $user->getId())
+            ->andWhere('td.dateReturn < :cd')
             ->setParameter('cd', $currentDate)
             ->getQuery()
             ->getResult();

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\ItineraryRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,6 +24,7 @@ class Itinerary
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Expression(expression="this.getDayArrival <= value", message="The day of departure must come after the day of arrival.")
      */
     private $dayDeparture;
 

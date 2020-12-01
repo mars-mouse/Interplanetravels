@@ -1,0 +1,61 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Travel Editing
+{% endblock %}
+
+
+{% block main %}
+	<section>
+		<h2>Editing Travel</h2>
+		<img class="my-2" src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Travel" alt="placeholder">
+		<p>Name :
+			{{ travel.name }}</p>
+		<p>Price :
+			{{ (travel.price / 100)|format_currency('USD') }}</p>
+		<p>Number of places :
+			{{ travel.maxPlaces }}</p>
+		<p>Description :
+			<br>
+			{{ travel.description }}</p>
+		<p>Depart from :
+			{{ travel.departFrom.name }}
+		</p>
+		<h3>Itinerary</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Destination</th>
+					<th>Day Arrival</th>
+					<th>Day Departure</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for itinerary in travel.itineraries %}
+					<tr>
+						<td>{{ itinerary.destination.name }}</td>
+						<td>{{ itinerary.dayArrival }}</td>
+						<td>{{ itinerary.dayDeparture }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<h3>Travel Dates</h3>
+		<a href="{{ path('backoffice_add_traveldates', {id: travel.id}) }}">Edit Travel Dates</a>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Date Departure</th>
+					<th>Date Return</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for travelDate in travel.travelDates %}
+					<tr>
+						<td>{{ travelDate.dateDeparture|date('Y-m-d H:i') }}</td>
+						<td>{{ travelDate.dateReturn|date('Y-m-d H:i') }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</section>
+{% endblock %}

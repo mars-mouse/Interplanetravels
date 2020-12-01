@@ -36,10 +36,10 @@
 						{% for travelDate in travelDate_list %}
 							<tr>
 								<td>
-									{{ travelDate.dateDeparture|date('Y-m-d h:i') }}
+									{{ travelDate.dateDeparture|date('Y-m-d H:i') }}
 								</td>
 								<td>
-									{{ travelDate.dateReturn|date('Y-m-d h:i') }}
+									{{ travelDate.dateReturn|date('Y-m-d H:i') }}
 								</td>
 								<td>
 									{{ travel.maxPlaces - booked[travelDate.id] }}
@@ -77,6 +77,24 @@
 					</div>
 				{% endfor %}
 			</div>
+		{% endif %}
+		<h2>Reviews</h2>
+		{% if travel.reviews is not empty %}
+			{% for review in travel.reviews %}
+				<div class="card col-3">
+					<div class="card-body">
+						<h5 class="card-title">Note :
+							{{ review.note }}</h5>
+						<h6 class="card-subtitle mb-2 text-muted">By
+							{{ review.user.firstName }}
+							{{ review.user.lastName }}</h6>
+						<p class="card-text">{{ review.comment|format_text(100) }}</p>
+						<a href="{{ path('review', {id: review.id}) }}" class="card-link">Read full comment</a>
+					</div>
+				</div>
+			{% endfor %}
+		{% else %}
+			<p>There isn't any review for this travel at the moment.</p>
 		{% endif %}
 	{% endif %}
 {% endblock %}
