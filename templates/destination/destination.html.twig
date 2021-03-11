@@ -28,19 +28,23 @@
 					</div>
 				</div>
 				<div class="row row-cols-1 row-cols-md-3">
-					{% for travel in travels_list %}
-						<div class="col mb-4">
-							<a class="no-underline" href="{{ path('travel', {id: travel.id}) }}">
-								<div class="card">
-									<img src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Travel" class="card-img-top" alt="Photo of SuperTravel">
-									<div class="card-body">
-										<h4 class="card-title">{{ travel.name }}</h4>
-										<p class="card-text">{{ travel.description|format_text(100)|raw() }}</p>
+					{% if travels_list.count > 0 %}
+						{% for travel in travels_list %}
+							<div class="col mb-4">
+								<a class="no-underline" href="{{ path('travel', {id: travel.id}) }}">
+									<div class="card">
+										<img src="https://via.placeholder.com/300x150/54718E/DEE8EE?text=Travel" class="card-img-top" alt="Photo of SuperTravel">
+										<div class="card-body">
+											<h4 class="card-title">{{ travel.name }}</h4>
+											<p class="card-text">{{ travel.description|format_text(100)|raw() }}</p>
+										</div>
 									</div>
-								</div>
-							</a>
-						</div>
-					{% endfor %}
+								</a>
+							</div>
+						{% endfor %}
+					{% else %}
+						<p class="ml-2">No available travel at the moment.</p>
+					{% endif %}
 				</div>
 				{% if max_pages > 1 %}
 					<ul

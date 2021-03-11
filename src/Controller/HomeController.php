@@ -42,7 +42,7 @@ class HomeController extends AbstractController
         // La page en cours est donnée en GET
         $page = $request->query->get('page', 1);
 
-        if (!is_numeric($page) && $page > 0) {
+        if (!is_numeric($page) || $page <= 0) {
             $page = 1;
         }
 

@@ -1,0 +1,25 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Add Travel Image
+{% endblock %}
+
+{% block main %}
+	<h2>Add Travel Image</h2>
+	{% for flashSuccess in app.flashes('successFile') %}
+		<div class="alert alert-success" role="alert">{{ flashSuccess }}</div>
+	{% endfor %}
+	{{ form_start(imageTravelForm) }}
+	<div class="form-row">
+		<div class="form-group col-6">
+			{{ form_row(imageTravelForm.travel, {attr: {class: 'form-control'}}) }}
+		</div>
+		<div class="form-group col-12">
+			{{ form_row(imageTravelForm.filename, {attr: {class: 'form-control'}}) }}
+		</div>
+		<div class="form-group col-12">
+			{{ form_row(imageTravelForm.caption, {attr: {class: 'form-control'}}) }}
+		</div>
+	</div>
+	<button type="submit" class="bouton">Add image to travel</button>
+	{{ form_end(imageTravelForm) }}
+{% endblock %}

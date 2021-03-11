@@ -1,0 +1,19 @@
+{% extends '_template.html.twig' %}
+
+{% block title %}Interplanetravels - Show images from travel
+{% endblock %}
+
+{% block main %}
+	<h2>Images from travel</h2>
+	<p>Travel :
+		{{ travel.name }}</p>
+	<div class="row">
+		{% for imageTravel in travel.images %}
+			<div class="d-flex flex-column justify-content-center align-items-center col-4">
+				<img class="img-fluid rounded" src="{{ images_site_directory ~ imageTravel.source }}" alt="{{ travel.name }} image {{ imageTravel.id }}">
+				<p>{{ imageTravel.caption }}</p>
+				<a href="{{ path('image_delete_imagetravel', {id: imageTravel.id}) }}">Delete this image</a>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}
